@@ -1,5 +1,10 @@
-import React, { useEffect, useState, lazy, Suspense } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import React, { Suspense, useContext, useEffect } from "react";
+import {
+	BrowserRouter as Router,
+	Switch,
+	Route,
+	Redirect,
+} from "react-router-dom";
 
 //import pages
 import Login from "./Pages/Login";
@@ -11,41 +16,56 @@ import Navbar from "./Components/Navbar";
 import PrivateRoute from "./Components/PrivateRoute";
 import Spinner from "./Components/Spinner";
 
-import { SesionFirebase } from "./helper/SignInFirebase";
+//import context
+import UserState from "./Context/Users/UserState";
+import UserContext from "./Context/Users/UserContext";
 
 function App() {
-	const [auth, setAuth] = useState(null);
+	return (
+		<UserState>
+			<RouterPagesProtected />
+		</UserState>
+	);
+}
+
+const RouterPagesProtected = () => {
+	const { userDataPresent, getUser, user } = useContext(UserContext);
 
 	useEffect(() => {
-		const asyncFunction = async () => {
-			const authSesion = await SesionFirebase();
-			console.log(authSesion);
-			setAuth(await authSesion);
-		};
-		asyncFunction();
+		getUser();
 	}, []);
 
 	return (
-		<Router>
-			<div>
-				<Navbar auth={auth}></Navbar>
-				{
-					<Suspense fallback={<Spinner />}>
-						<Switch>
-							<PrivateRoute auth component={DashBoard} path="/home" exact />
-							<Route exact path="/singup">
-								<SingUp />
-							</Route>
-							<Route exact path="/">
-								<Login />
-							</Route>
-						</Switch>
-					</Suspense>
-				}
-			</div>
-		</Router>
+		<>
+			{userDataPresent ? (
+				<Router>
+					<div>
+						<Navbar></Navbar>
+						{
+							<Suspense fallback={<Spinner />}>
+								<Switch>
+									<PrivateRoute component={DashBoard} path="/home" exact />
+									<Route exact path="/singup">
+										<SingUp />
+									</Route>
+									{!!!user ? (
+										<Route exact path="/">
+											<Login />
+										</Route>
+									) : (
+										<Redirect to="/home" />
+									)}
+								</Switch>
+							</Suspense>
+						}
+					</div>
+				</Router>
+			) : (
+				<Spinner />
+			)}
+		</>
 	);
-}
+};
 
 App.propTypes = {};
 

@@ -8,7 +8,7 @@ export const LoginWithEmail = (email, password) => {
 };
 
 export const SesionFirebase = () => {
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		Firebase.auth().onAuthStateChanged((user) => {
 			if (user) {
 				// User is signed in, see docs for a list of available properties
@@ -24,7 +24,20 @@ export const SesionFirebase = () => {
 	});
 };
 
-export const LogoutFirebase = () => Firebase.auth().signOut();
+export const LogoutFirebase = () => {
+	return new Promise((resolve) => {
+		Firebase.auth()
+			.signOut()
+			.then(() => {
+				// Sign-out successful.
+				resolve(true);
+			})
+			.catch((error) => {
+				resolve(false);
+				// An error happened.
+			});
+	});
+};
 
 export const CreateUserWithEmail = (email, password) =>
 	Firebase.auth().createUserWithEmailAndPassword(email, password);

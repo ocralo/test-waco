@@ -15,7 +15,7 @@ import WacoLogo from "./../../Assets/Img/waco.png";
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
-		marginTop: theme.spacing(12),
+		marginTop: theme.spacing(9),
 		display: "flex",
 		flexDirection: "column",
 		alignItems: "center",
@@ -76,8 +76,8 @@ export default function SignUp() {
 					console.log(user);
 				})
 				.catch((error) => {
-					var errorCode = error.code;
-					var errorMessage = error.message;
+					/* var errorCode = error.code;
+					var errorMessage = error.message; */
 					// ..
 				});
 		}
@@ -154,7 +154,10 @@ export default function SignUp() {
 					</Button>
 					<Grid container justify="flex-end">
 						<Grid item>
-							<Link href="#" variant="body2">
+							<Link
+								href="#"
+								onClick={() => history.push("/")}
+								variant="body2">
 								Already have an account? Sign in
 							</Link>
 						</Grid>

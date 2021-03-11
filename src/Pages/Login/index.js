@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 
-import { LoginWithEmail } from "./../../helper/SignInFirebase";
+import UserContext from "./../../Context/Users/UserContext";
 
 import WacoLogo from "./../../Assets/Img/waco.png";
 
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 		minHeight: "100%",
 	},
 	paper: {
-		marginTop: theme.spacing(12),
+		marginTop: theme.spacing(9),
 		display: "flex",
 		flexDirection: "column",
 		alignItems: "center",
@@ -41,6 +41,8 @@ export default function SignIn() {
 	const classes = useStyles();
 	let history = useHistory();
 
+	const { logintUser } = useContext(UserContext);
+
 	const handleInputChange = (event) => {
 		const target = event.target;
 		const value =
@@ -53,17 +55,8 @@ export default function SignIn() {
 	const handleSubmit = (event) => {
 		event.preventDefault();
 		if (!!userEmail.email && !!userEmail.password) {
-			LoginWithEmail(userEmail.email, userEmail.password)
-				.then((user) => {
-					// Signed in
-					console.log(user);
-					history.push("/home");
-				})
-				.catch((error) => {
-					var errorCode = error.code;
-					var errorMessage = error.message;
-					// ..
-				});
+			logintUser(userEmail.email, userEmail.password);
+			history.push("/home");
 		}
 	};
 

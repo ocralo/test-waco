@@ -1,21 +1,31 @@
-import { GET_PROFILE, GET_USERS } from "./../Types";
+import { GET_USERS, LOGOUT_USERS, LOGIN_USERS } from "./../Types";
 
 const UserReducer = (state, action) => {
-  const { type, payload } = action;
+	const { type, payload, userDataPresent } = action;
 
-  switch (type) {
-    case GET_USERS:
-      return {
-        ...state,
-        userList: payload,
-      };
+	switch (type) {
+		case GET_USERS:
+			return {
+				...state,
+				user: payload,
+				userDataPresent,
+			};
 
-    case GET_PROFILE:
-      return { ...state, selectedUser: payload };
+		case LOGOUT_USERS:
+			return {
+				...state,
+				user: payload,
+			};
 
-    default:
-      return { ...state };
-  }
+		case LOGIN_USERS:
+			return {
+				...state,
+				user: payload,
+			};
+
+		default:
+			return { ...state };
+	}
 };
 
 export default UserReducer;

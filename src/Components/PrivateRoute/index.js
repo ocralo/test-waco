@@ -1,16 +1,15 @@
-import React, { lazy, Suspense } from "react";
+import React, { useContext } from "react";
 import { Route, Redirect } from "react-router-dom";
 
-import { SesionFirebase } from "./../../helper/SignInFirebase";
+import UserContext from "./../../Context/Users/UserContext";
 
-const PrivateRoute = ({ component: Component, auth, ...rest }) => {
+const PrivateRoute = ({ component: Component, ...rest }) => {
+	const { user: auth } = useContext(UserContext);
 	return (
-		// Show the component only when the user is logged in
-		// Otherwise, redirect the user to /signin page
 		<Route
 			{...rest}
 			render={(props) =>
-				auth ? (
+				!!auth ? (
 					<Component {...props} />
 				) : (
 					<Redirect
@@ -21,5 +20,23 @@ const PrivateRoute = ({ component: Component, auth, ...rest }) => {
 		/>
 	);
 };
+
+export function ProtectedRoute({ component: Component, path }) {
+	const { user, userDataPresent } = useContext(UserContext);
+
+	if (userDataPresent) {
+		if (user == null) {
+			return <Redirect to={"/"}></Redirect>;
+		} else {
+			return (
+				<Route exact path={path}>
+					<Component />
+				</Route>
+			);
+		}
+	} else {
+		return null;
+	}
+}
 
 export default PrivateRoute;

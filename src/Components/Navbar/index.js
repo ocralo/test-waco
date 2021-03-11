@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -14,7 +15,7 @@ import Divider from "@material-ui/core/Divider";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 
-import { LogoutFirebase } from "./../../helper/SignInFirebase";
+import UserContext from "./../../Context/Users/UserContext";
 
 const drawerWidth = 240;
 
@@ -41,12 +42,19 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function MenuAppBar({ auth, children }) {
+export default function MenuAppBar({}) {
 	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [menuOpen, setMenuOpen] = useState(null);
 	const open = Boolean(anchorEl);
 	const openMenu = Boolean(menuOpen);
+
+	let history = useHistory();
+	const { getUser, user: auth, logoutUser } = useContext(UserContext);
+
+	useEffect(() => {
+		getUser();
+	}, []);
 
 	const handleDrawerOpen = () => {
 		setMenuOpen(true);
@@ -64,18 +72,21 @@ export default function MenuAppBar({ auth, children }) {
 		setAnchorEl(null);
 	};
 	const handleCloseLogout = () => {
-		LogoutFirebase()
+		/* LogoutFirebase()
 			.then((result) => {
 				setAnchorEl(null);
+				history("/");
 			})
-			.catch((err) => {});
+			.catch((err) => {}); */
+		logoutUser();
+		history.push("/");
 	};
 
 	return (
 		<div className={classes.root}>
 			<AppBar>
 				<Toolbar>
-					{!!auth && (
+					{/* {!!auth && (
 						<IconButton
 							edge="start"
 							className={classes.menuButton}
@@ -84,7 +95,7 @@ export default function MenuAppBar({ auth, children }) {
 							aria-label="menu">
 							<MenuIcon />
 						</IconButton>
-					)}
+					)} */}
 					<Typography variant="h6" className={classes.title}>
 						Waco test
 					</Typography>
