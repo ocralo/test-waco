@@ -1,9 +1,8 @@
 import React, { useState, useContext } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -34,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
 	submit: {
 		margin: theme.spacing(3, 0, 2),
 	},
+	link: { color: "#3f51b5" },
 }));
 
 export default function SignIn() {
@@ -108,7 +108,10 @@ export default function SignIn() {
 					</Button>
 					<Grid container>
 						<Grid item>
-							<Link onClick={() => history.push("/singup")} variant="body2">
+							<Link
+								className={classes.link}
+								onClick={() => history.push("/singup")}
+								variant="body2">
 								{"Don't have an account? Sign Up"}
 							</Link>
 						</Grid>
